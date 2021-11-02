@@ -5,3 +5,7 @@ The LCM is actually  built for a specific [Comp4Drones](https://www.comp4drones.
 ## How it works
 The  component offers its security features for communications between different entities by encrypting and decrypting the data that is be exchanged between them.
 Moreover, when an encrypted data is received, the component verifies the authenticity of the message.
+## Files description
+The *LCM.h* file implements all the main functions of the cryptographic module.
+The *TAKS.h* is the library that implements the TAKS algorithm.
+The *AES.h* is the library that implements the symmetric message encryption and decryption functions.
