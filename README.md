@@ -11,3 +11,10 @@ The *LCM.h* file implements all the main functions of the cryptographic module.
 The *TAKS.h* is the library that implements the TAKS algorithm.
 
 The *AES.h* is the library that implements the symmetric message encryption and decryption functions.
+## Usage description
+To correctly use the library tests follow this steps:
+
+1.  Include .h files into the project folder
+2.  Compile main.c and run your code 
+
+**Make sure to include the right files based on the OS used.**
