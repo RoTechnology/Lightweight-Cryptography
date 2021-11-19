@@ -6,12 +6,12 @@
 
 1. If needed, change the ip address at line 82 in **client.c**; default is _127.0.0.1_.
 
-2. To compile the server, run the command:
+2. To compile the server, cd into server folder and run the command:
     ```
     gcc server.c -o server
     ```
 
-3. To compile the client, run the command:
+3. To compile the client, cd into client folder and run the command:
     ```
     gcc client.c -o client
     ```
