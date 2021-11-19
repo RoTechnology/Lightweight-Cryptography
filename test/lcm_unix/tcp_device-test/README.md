@@ -4,7 +4,7 @@
 
 * **COMPILE PROCEDURE**
 
-1. If needed, change the ip address at line 82 in **client.c**; default is _127.0.0.1_.
+1. If needed, change the ip address at line 82 in **client.c** (default is _127.0.0.1_), and the PORT defined in both **client.c** and **server.c** (default is _8080_).
 
 2. To compile the server, cd into server folder and run the command:
     ```
