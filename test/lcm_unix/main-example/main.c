@@ -9,9 +9,11 @@ int main(int argc, char **argv){
     if (argc < 2)
         return -1;
 
+	initNodes();
+
     printf("\n\nINPUT MESSAGE - PLAIN TEXT: %s",argv[1]);
 
-    int r = encrypt_message(&temp,argv[1]);
+    int r = encryptMessage(&temp,argv[1]);
 
     if (r == -1) {
         printf("\n\n    ENCRYPT ERROR");
@@ -22,7 +24,7 @@ int main(int argc, char **argv){
     printf("\n\n    Message Encrypted \n");
     printf("\nRESULT: %d", r);
 
-    r = decrypt(decrypted,&temp);
+    r = decryptMessage(decrypted,&temp);
      
     if (r == -1) {
         printf("\n\n    DECRYPT ERROR");
