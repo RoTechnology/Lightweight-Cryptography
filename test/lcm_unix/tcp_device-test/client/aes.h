@@ -302,12 +302,12 @@ void AES_CBC_MAC(uint8_t *output, const uint8_t *key, const uint8_t *text, uint1
 
 	// NONCE
 	for (i = 0; i < 16; ++i)
-		block[i] = 0;
-	AES_Encrypt_Block(feedback, key, block);
+		feedback[i] = 0;
+	AES_Encrypt_Block(feedback, key, feedback);
 	for (b = 0; b < nblocks; ++b) {
 		for (i = 0; i < 16; ++i)
 			block[i] = text[b*16 + i] ^ feedback[i];
-		AES_Decrypt_Block(feedback, key, block);
+		AES_Encrypt_Block(feedback, key, block);
 	}
 
 	for (i = 0; i < TAKS_MAC_LEN; ++i)

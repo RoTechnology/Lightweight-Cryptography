@@ -8,59 +8,8 @@
 #define PORT 8080
 #define SA struct sockaddr
 
-
-void createMessage(uint8_t* message, uint8_t* datatocopy, int start, int end)
-{
-	int i;
-	int j = 0;
-	for (i = start; i < end; i++)
-	{
-		message[j] = datatocopy[i];
-		j++;
-	}
-}
-
-void func(int sockfd)
-{
-	char buff[MAX];
-	uint8_t received[MAX];
-	message_t temp;
-	char decrypted[TAKS_PAYLOAD_LEN];
-	int n;
-
-	for (;;) {
-		bzero(buff, sizeof(buff));
-		printf("\n\nEnter the string : ");
-		n = 0;
-		while ((buff[n++] = getchar()) != '\n');
-
-		write(sockfd, buff, sizeof(buff));
-
-		bzero(received, sizeof(received));
-		
-		read(sockfd, received, sizeof(received));
-
-	//	int size = TAKS_PAYLOAD_LEN + TAKS_KRI_LEN + TAKS_MAC_LEN;
-	//	print(received, sizeof(received), "\n\n--- from Server: ");
-
-		if ((strncmp(received, "exit", 4)) == 0) {
-			printf("\n\nClient Exit...\n");
-			break;
-		}
-		 
-		createMessage(temp.mac, received, 0, 4);
-		createMessage(temp.payload, received, 4, 20);
-		createMessage(temp.kri, received, 20, 52);
-
-		//call encryption
-		int r = decrypt(decrypted, &temp);
-
-		if (r == -1) {
-			printf("\n\n    DECRYPT ERROR"); 
-			printf("\n----------------------------------------\n\n\n\n\n\n\n\n");
-		}
-	}
-}
+void createMessage(uint8_t* message, uint8_t* datatocopy, int start, int end);
+void func(int sockfd);
 
 int main()
 {
@@ -95,4 +44,56 @@ int main()
 
 	// close the socket
 	close(sockfd);
+}
+
+void createMessage(uint8_t* message, uint8_t* datatocopy, int start, int end)
+{
+	int i;
+	int j = 0;
+	for (i = start; i < end; i++)
+	{
+		message[j] = datatocopy[i];
+		j++;
+	}
+}
+
+void func(int sockfd)
+{
+	char buff[MAX];
+	uint8_t received[MAX];
+	message_t temp;
+	char decrypted[TAKS_PAYLOAD_LEN];
+	int n;
+	
+	initNodes();
+
+	for (;;) {
+		bzero(buff, sizeof(buff));
+		printf("\n\nEnter the string : ");
+		n = 0;
+		while ((buff[n++] = getchar()) != '\n');
+
+		write(sockfd, buff, sizeof(buff));
+
+		bzero(received, sizeof(received));
+		
+		read(sockfd, received, sizeof(received));
+
+		if ((strncmp(received, "exit", 4)) == 0) {
+			printf("\n\nClient Exit...\n");
+			break;
+		}
+		 
+		createMessage(temp.mac, received, 0, 4);
+		createMessage(temp.payload, received, 4, 20);
+		createMessage(temp.kri, received, 20, 52);
+
+		//call encryption
+		int r = decryptMessage(decrypted, &temp);
+
+		if (r == -1) {
+			printf("\n\n    DECRYPT ERROR"); 
+			printf("\n----------------------------------------\n\n\n\n\n\n\n\n");
+		}
+	}
 }
