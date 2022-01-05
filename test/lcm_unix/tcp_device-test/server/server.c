@@ -10,67 +10,8 @@
 #define PORT 8080
 #define SA struct sockaddr
 
-void createBuffer(uint8_t *tosend, uint8_t *datatocopy, int start, int end)
-{
-	int i;
-	int j = 0;
-	for (i = start; i < end; i++)
-	{
-		tosend[i] = datatocopy[j];
-		j++;
-	}
-}
-
-// Function designed for chat between client and server.
-void func(int sockfd)
-{
-	char buff[MAX];
-	uint8_t tosend[MAX];
-	message_t temp;
-	int n;
-
-	// infinite loop for chat
-	for (;;) {
-		bzero(buff, MAX);
-
-		// read the message from client and copy it in buffer
-		read(sockfd, buff, sizeof(buff));
-		// print buffer which contains the client contents
-		printf("\n\nFrom client: %s\n", buff);
-		
-		// if msg contains "Exit" then server exit and chat ended.
-		if (strncmp("exit", buff, 4) == 0) {
-			char exstr[5] = "exit";
-			exstr[4] = '\0';
-			write(sockfd, exstr, sizeof(exstr));
-			printf("\n\nServer Exit...\n");
-			break;
-		}
-		
-		//call encryption
-		int r = encrypt_message(&temp, buff);
-		
-		if (r == -1) {
-        printf("\n\n    ENCRYPT ERROR");
-        printf("\n||---------------------------------------------------------------------------------------||\n\n\n\n\n\n\n\n");
-		}
-		
-		bzero(buff, MAX);
-		n = 0;
-
-		bzero(tosend, MAX);
-
-		createBuffer(tosend, temp.mac, 0, 4); 
-		createBuffer(tosend, temp.payload, 4, 20); 
-		createBuffer(tosend, temp.kri, 20, 52);
-
-	//	int size = TAKS_PAYLOAD_LEN + TAKS_KRI_LEN + TAKS_MAC_LEN;		
-		//print(tosend, sizeof(tosend), "\n\n--- in buffer now: ");
-
-		// send that buffer to client
-		write(sockfd, tosend, sizeof(tosend));
-	}
-}
+void createBuffer(uint8_t *tosend, uint8_t *datatocopy, int start, int end);
+void func(int sockfd);
 
 // Driver function
 int main()
@@ -124,4 +65,68 @@ int main()
 
 	// After chatting close the socket
 	close(sockfd);
+}
+
+void createBuffer(uint8_t *tosend, uint8_t *datatocopy, int start, int end)
+{
+	int i;
+	int j = 0;
+	for (i = start; i < end; i++)
+	{
+		tosend[i] = datatocopy[j];
+		j++;
+	}
+}
+
+// Function designed for chat between client and server.
+void func(int sockfd)
+{
+	char buff[MAX];
+	uint8_t tosend[MAX];
+	message_t temp;
+	int n;
+	
+	initNodes();
+
+	// infinite loop for chat
+	for (;;) {
+		bzero(buff, MAX);
+
+		// read the message from client and copy it in buffer
+		read(sockfd, buff, sizeof(buff));
+		// print buffer which contains the client contents
+		printf("\n\nFrom client: %s\n", buff);
+		
+		// if msg contains "Exit" then server exit and chat ended.
+		if (strncmp("exit", buff, 4) == 0) {
+			char exstr[5] = "exit";
+			exstr[4] = '\0';
+			write(sockfd, exstr, sizeof(exstr));
+			printf("\n\nServer Exit...\n");
+			break;
+		}
+		
+		//call encryption
+		int r = encryptMessage(&temp, buff);
+		
+		if (r == -1) {
+        printf("\n\n    ENCRYPT ERROR");
+        printf("\n||---------------------------------------------------------------------------------------||\n\n\n\n\n\n\n\n");
+		}
+		
+		bzero(buff, MAX);
+		n = 0;
+
+		bzero(tosend, MAX);
+
+		createBuffer(tosend, temp.mac, 0, 4); 
+		createBuffer(tosend, temp.payload, 4, 20); 
+		createBuffer(tosend, temp.kri, 20, 52);
+
+	//	int size = TAKS_PAYLOAD_LEN + TAKS_KRI_LEN + TAKS_MAC_LEN;		
+		//print(tosend, sizeof(tosend), "\n\n--- in buffer now: ");
+
+		// send that buffer to client
+		write(sockfd, tosend, sizeof(tosend));
+	}
 }
