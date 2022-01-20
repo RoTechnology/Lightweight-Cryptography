@@ -15,8 +15,8 @@
 
 #define TAKS_PAYLOAD_LEN 16
 
-//#define TAKS_USE_AES
-#define TAKS_SIMPLE
+#define TAKS_USE_AES
+//#define TAKS_SIMPLE
 
 typedef struct message {
     uint16_t counter;
